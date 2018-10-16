@@ -64,7 +64,7 @@ class Vpobede(object):
 
         cache_age = today - update_datetime
 
-        if cache_age.seconds > cache_ttl:
+        if cache_age.total_seconds() > cache_ttl:
             return False  # Кэш просрочен
 
         self.events = data
@@ -156,7 +156,7 @@ class Vpobede(object):
         if use_cache:
             # Проверяем свежесть имеющихся данных. Если свежие - отдаём их.
             if self.events.get('update_datetime'):
-                if (today - self.events['update_datetime']).seconds < cache_ttl:
+                if (today - self.events['update_datetime']).total_seconds() < cache_ttl:
                     return self.events
 
             # Загружаем данные из кэша
