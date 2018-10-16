@@ -145,27 +145,10 @@ class Vpobede(object):
 
         return event_sessions, event_sessions_days
 
-    def get_events(self,
-                   use_cache=True,
-                   cache_ttl=DEFAULT_CACHE_TTL,
-                   schedule_period=DEFAULT_SCHEDULE_PERIOD,
-                   events_limit=DEFAULT_EVENTS_LIMIT):
-        """Обновляет данные по событиям и возвращает словарь с событиями/фильмами"""
-        today = datetime.datetime.today()
-
-        if use_cache:
-            # Проверяем свежесть имеющихся данных. Если свежие - отдаём их.
-            if self.events.get('update_datetime'):
-                if (today - self.events['update_datetime']).total_seconds() < cache_ttl:
-                    return self.events
-
-            # Загружаем данные из кэша
-            if self.load_from_cache(cache_ttl):
-                return self.events
-
-        # Обновяем данные с сайта кинотеатра
+    def update_events(self, schedule_period=DEFAULT_SCHEDULE_PERIOD, events_limit=DEFAULT_EVENTS_LIMIT, save_to_cache=True):
+        """Обновляет события с сайта кинотеатра"""
         start_time = 'NOW'
-        end_time = today + datetime.timedelta(days=schedule_period)
+        end_time = datetime.datetime.today() + datetime.timedelta(days=schedule_period)
         end_time = end_time.strftime('%Y-%m-%dT04:00:00') + '%2B07:00'
 
         limit = ''
@@ -184,6 +167,9 @@ class Vpobede(object):
         }
 
         vpobede_events = self.get_http(events_url)
+
+        if not vpobede_events:
+            return False
 
         for vpobede_event in vpobede_events:
             event_id = str(vpobede_event['id'])
@@ -231,6 +217,24 @@ class Vpobede(object):
             'groups': events_groups,
         })
 
-        self.save_to_cache()
+        if save_to_cache:
+            self.save_to_cache()
+
+        return True
+
+    def get_events(self, use_cache=True, cache_ttl=DEFAULT_CACHE_TTL):
+        """Обновляет данные по событиям и возвращает словарь с событиями/фильмами"""
+
+        if use_cache:
+            # Проверяем свежесть имеющихся данных. Если свежие - отдаём их.
+            if self.events.get('update_datetime'):
+                if (datetime.datetime.today() - self.events['update_datetime']).total_seconds() < cache_ttl:
+                    return self.events
+
+            # Загружаем данные из кэша
+            if self.load_from_cache(cache_ttl):
+                return self.events
+
+        self.update_events()  # Обновляем события с сайта кинотеатра, т.к. в кэше нет свежих данных
 
         return self.events
