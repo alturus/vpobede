@@ -201,7 +201,10 @@ class Vpobede(object):
 
             if vpobede_event['eventGroup']:
                 event_group_id = str(vpobede_event['eventGroup']['id'])
-                event_group_name = vpobede_event['eventGroup']['currentSet']['name']
+                if vpobede_event['eventGroup']['currentSet']:
+                    event_group_name = vpobede_event['eventGroup']['currentSet'].get('name')
+                else:
+                    event_group_name = vpobede_event['eventGroup'].get('name')
 
             if event_group_id in events_groups:
                 events_groups[event_group_id]['events'].append(event_id)
