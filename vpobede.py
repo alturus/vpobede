@@ -94,9 +94,9 @@ class Vpobede(object):
             return None
 
         event_details = {
-            'year': event_data['techParameters'][0]['value'],        # Год выхода
-            'country': event_data['techParameters'][1]['value'],     # Страна производитель
-            'director': event_data['techParameters'][2]['value'],    # Режиссёр
+            'year': None,                                            # Год выхода
+            'country': None,                                         # Страна производитель
+            'director': None,                                        # Режиссёр
             'lead': event_data['lead'],                              # Слоган события
             'description': event_data['body'],                       # Описание события
             'slug': event_data['slug'],                              # slug для формирование url на событие
@@ -118,6 +118,16 @@ class Vpobede(object):
             for key, value in performance.items():
                 if str(key).startswith('session') and value is True:
                     event_details['performance'][key] = True
+
+        for tech_param in event_data.get('techParameters'):
+            if tech_param['name'] == 'Год':
+                event_details['year'] = tech_param.get('value')
+
+            if tech_param['name'] in ('Страна', 'Страны'):
+                event_details['country'] = tech_param.get('value')
+
+            if tech_param['name'] in ('Режиссер', 'Режиссеры'):
+                event_details['director'] = tech_param.get('value')
 
         return event_details
 
