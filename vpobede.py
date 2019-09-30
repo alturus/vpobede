@@ -94,12 +94,12 @@ class Vpobede(object):
             return None
 
         event_details = {
-            'year': None,                                            # Год выхода
-            'country': None,                                         # Страна производитель
-            'director': None,                                        # Режиссёр
+            'year': '',                                            # Год выхода
+            'country': '',                                         # Страна производитель
+            'director': '',                                        # Режиссёр
             'lead': event_data['lead'],                              # Слоган события
             'description': event_data['body'],                       # Описание события
-            'slug': event_data['slug'],                              # slug для формирование url на событие
+            'slug': event_data['slug'],                              # slug для формирования url на событие
             'age_restriction': event_data['ageRestriction'],         # Возрастное ограничение
             'duration': event_data['duration'],                      # Длительность в минутах
             'session_only_here': event_data.get('sessionOnlyHere'),  # Событие проходит только в Победе
@@ -151,7 +151,7 @@ class Vpobede(object):
                 event_sessions.append(session['startTime'])
                 event_sessions_days.add(datetime.datetime.strftime(start_datetime, '%d/%m'))
 
-        event_sessions_days = sorted(list(event_sessions_days))
+        event_sessions_days = sorted(list(event_sessions_days), key=lambda x: int(x.split('/')[1] + x.split('/')[0]))
 
         return event_sessions, event_sessions_days
 

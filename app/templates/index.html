@@ -32,8 +32,8 @@
                         </h4>
                         <div class="card-body">
                             <img src="{{ events[event_id]['billboard_url'] }}" alt="{{ events[event_id]['name'] }}" class="img-thumbnail rounded float-left mr-3">
-                            <div class="card-title">{{ events[event_id]['lead']|safe }}</div>
-                            <div class="card-text">{{ events[event_id]['description']|safe }}</div>
+                            <div class="card-title">{{ events[event_id]['lead']|default('', true)|safe }}</div>
+                            <div class="card-text">{{ events[event_id]['description']|default('', true)|safe }}</div>
                             <hr>
                             <div class="card-text">
                                 {% if events[event_id]['performance']['session2d'] %}
