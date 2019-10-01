@@ -97,9 +97,9 @@ class Vpobede(object):
             'year': '',                                            # Год выхода
             'country': '',                                         # Страна производитель
             'director': '',                                        # Режиссёр
-            'lead': event_data['lead'],                              # Слоган события
-            'description': event_data['body'],                       # Описание события
-            'slug': event_data['slug'],                              # slug для формирования url на событие
+            'lead': event_data.get('lead', ''),                      # Слоган события
+            'description': event_data.get('body', ''),               # Описание события
+            'slug': event_data.get('slug', ''),                      # slug для формирования url на событие
             'age_restriction': event_data['ageRestriction'],         # Возрастное ограничение
             'duration': event_data['duration'],                      # Длительность в минутах
             'session_only_here': event_data.get('sessionOnlyHere'),  # Событие проходит только в Победе
@@ -183,8 +183,8 @@ class Vpobede(object):
 
         for vpobede_event in vpobede_events:
             event_id = str(vpobede_event['id'])
-            event_name = vpobede_event['name']
-            event_name_eng = vpobede_event['nameEng']
+            event_name = vpobede_event.get('name', '')
+            event_name_eng = vpobede_event.get('nameEng', '')
             event_billboard_url = vpobede_event['billboardThumbnails'].get('event_billboard_320')
             event_genres = [genre.get('name') for genre in vpobede_event['genres']]
 
@@ -209,9 +209,9 @@ class Vpobede(object):
             event_group_id = '9999'  # Группа по-умолчанию (все события без группы попадают сюда)
             event_group_name = ''
 
-            if vpobede_event['eventGroup']:
+            if 'eventGroup' in vpobede_event:
                 event_group_id = str(vpobede_event['eventGroup']['id'])
-                if vpobede_event['eventGroup']['currentSet']:
+                if 'currentSet' in vpobede_event['eventGroup']:
                     event_group_name = vpobede_event['eventGroup']['currentSet'].get('name')
                 else:
                     event_group_name = vpobede_event['eventGroup'].get('name')
