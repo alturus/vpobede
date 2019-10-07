@@ -151,7 +151,7 @@ class Vpobede(object):
                 event_sessions.append(session['startTime'])
                 event_sessions_days.add(datetime.datetime.strftime(start_datetime, '%d/%m'))
 
-        event_sessions_days = sorted(list(event_sessions_days), key=lambda x: int(x.split('/')[1] + x.split('/')[0]))
+        event_sessions_days = sorted(list(event_sessions_days), key=lambda day: '{1}{0}'.format(*day.split('/')))
 
         return event_sessions, event_sessions_days
 
