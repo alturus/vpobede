@@ -100,8 +100,8 @@ class Vpobede(object):
             'lead': event_data.get('lead', ''),                      # Слоган события
             'description': event_data.get('body', ''),               # Описание события
             'slug': event_data.get('slug', ''),                      # slug для формирования url на событие
-            'age_restriction': event_data['ageRestriction'],         # Возрастное ограничение
-            'duration': event_data['duration'],                      # Длительность в минутах
+            'age_restriction': event_data.get('ageRestriction'),     # Возрастное ограничение
+            'duration': event_data.get('duration'),                  # Длительность в минутах
             'session_only_here': event_data.get('sessionOnlyHere'),  # Событие проходит только в Победе
             'session_baby': event_data.get('sessionBaby'),           # Событие для детей
             'performance': {                                         # Словарь с перечнем характеристик сеансов
